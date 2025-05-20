@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <malloc.h>
+#include <string.h>
 #include "../include/functions.h"
 
 typedef enum{
@@ -18,11 +19,11 @@ typedef enum{
 	uINT64,
 	CHAR,
 	STR,
-	f4,
-	f8,
-	f16,
-	f32,
-	f64,
+	F5_3,
+	F8_23_FLOAT,
+	F10_42,
+	F11_52_DOUBLE,
+	F14_71,
 	ARR,
 	HASH,
 }prismVariableType;
@@ -30,7 +31,7 @@ typedef enum{
 typedef struct{
 	prismVariableType type;	
 	size_t size;
-	void* data;
+	void** data;
 }prismVariable;
 
 
@@ -81,29 +82,39 @@ prismVariable assign_variable(prismVariableType type, void* data){
 		case STR:
 			newVariable.data = (char*)malloc(sizeof(char*)*2);
 			break;
-		case f4:
+		case F5_3:
+			newVariable.data = (f5_3*)malloc(sizeof(f5_3));
 			break;
-		case f8:
+		case F8_23_FLOAT:
+			newVariable.data = (f8_23_float*)malloc(sizeof(f8_23_float));
 			break;
-		case f16:
+		case F10_42:
+			newVariable.data = (f10_42*)malloc(sizeof(f10_42));
 			break;
-		case f32:
+		case F11_52_DOUBLE:
+			newVariable.data = (f11_52_double*)malloc(sizeof(f11_52_double));
 			break;
-		case f64:
+		case F14_71:
+			newVariable.data = (f14_71*)malloc(sizeof(f14_71));
 			break;
 		case ARR:
+			newVariable.data = (prismVariable*)malloc(sizeof(prismVariable)*5);
 			break;
 		case HASH:
+			newVariable.data = (void**)malloc(sizeof(void*)*2);
+			newVariable.data[0] = (char*)malloc(sizeof(char*)*5);
+			newVariable.data[1] = (void*)malloc(sizeof(void*)*5);
 			break;
 		default:
 			newVariable.data = malloc(sizeof(int)*2);
+			fprintf(stderr, "Critical Memory Error: Memory corruption of type prismVariableType at %p: %d/", &assign_variable, type);
 			break;
 	}
 }
 
 
 // make enums readable
-const char* prismVariableType_to_string(prismVariableType type){
+char* prismVariableType_to_string(prismVariableType type){
 	switch(type){
 		case INT2:
 			return "INT2";
@@ -147,20 +158,20 @@ const char* prismVariableType_to_string(prismVariableType type){
 		case STR:
 			return "STR";
 			break;
-		case f4:
-			return "f4";
+		case F5_3:
+			return "F5_3";
 			break;
-		case f8:
-			return "f8";
+		case F8_23_FLOAT:
+			return "f8_23FLOAT";
 			break;
-		case f16:
-			return "f16";
+		case F10_42:
+			return "F10_42";
 			break;
-		case f32:
-			return "f32";
+		case F11_52_DOUBLE:
+			return "f11_52DOUBLE";
 			break;
-		case f64:
-			return "f64";
+		case F14_71:
+			return "F14_71";
 			break;
 		case ARR:
 			return "ARR";
